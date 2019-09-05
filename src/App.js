@@ -1,26 +1,44 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
+import firebase from './components/firebase';
+import Header from './components/Header';
+import Button from './components/Button';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      clickCount: 0,
+    }
+  }
+
+  componentDidMount() {
+
+    //connecting firebase with react
+    const dbRef = firebase.database().ref();
+    dbRef.on('value', (response) => {
+      console.log(response.val())
+    })
+  }
+  
+  //count button clicks
+  clickCounter = () => {
+    this.setState({
+      clickCount: this.state.clickCount + 1,
+    })
+    console.log('clicked');
+  }
+
+
+  render() {
+    return (
+      <div>
+        <Header />
+        <Button fn={this.clickCounter}/>
+      </div>
+    )
+  };
 }
 
 export default App;
