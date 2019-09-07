@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 
 class Scroll extends Component {
-
-
+  
   render() {
     return (
-      <section className="scrollSection" onScroll={this.props.scrollFn}>
+      <section className="scrollSection" id="scrollSection">
         <h2>Educated Humour</h2>
         <p>The Bachelors of Fine Arts’ blend of highbrow and lowbrow is evident in one of their promotional photos, taken one Saturday afternoon in front of the Arts building. A group of young people pensively stand on the steps dressed in togas obviously made from their bed sheets, while, off to the side, two guys salaciously pose in their underwear. Naturally, the security guard chased them away immediately (partly because there was a second grade spelling bee inside).</p>
         <p>As their sense of humour seems to be unwelcome on McGill grounds, the Bachelors of Fine Arts are taking to other venues – notably La Sala Rossa, where they will be performing on March 23. Formed by friends and fellow performers, the Bachelors are putting on their second show as a collective, entitled Live Miseducation II. Current McGill student and founding member Toby Houle described their clever and self-deprecating comedy as “reaching for the stars and falling in the shit.”</p>

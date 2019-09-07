@@ -16,6 +16,7 @@ class App extends Component {
       totalVisit: 0,
       totalClick: 0,
       avgClick: 0,
+      scrolled: false,
     }
   }
 
@@ -25,34 +26,37 @@ class App extends Component {
       clickCount: 0,
     })
 
-    //connecting firebase with react
-    const dbRef = firebase.database().ref();
-    
-    dbRef.on('value', (data) => {
-      
-      //grab the data from FB, return an object
-      data = data.val();
-      
-      //go through this object, and turn it into an array 
-      const fbValuesArray = Object.values(data);
-      
-      //pass this data to data analysis function
-      this.dataAnalysis(fbValuesArray)
+    this.showVisible();
+    window.addEventListener("scroll", this.showVisible, false);
 
-    })
+    //connecting firebase with react
+    // const dbRef = firebase.database().ref();
+    
+    // dbRef.on('value', (data) => {
+      
+    //   //grab the data from FB, return an object
+    //   data = data.val();
+      
+    //   //go through this object, and turn it into an array 
+    //   const fbValuesArray = Object.values(data);
+      
+    //   //pass this data to data analysis function
+    //   this.dataAnalysis(fbValuesArray)
+
+    // })
 
     //upload data collected to firebase before user refreshes or close the page
-    window.addEventListener('beforeunload', (e) => {
-      // e.preventDefault();
-      const session = {
-        visit: this.state.visitCount,
-        clickCount: this.state.clickCount
-      }
-      dbRef.push({session});
+    // window.addEventListener('beforeunload', (e) => {
+    //   // e.preventDefault();
+    //   const session = {
+    //     visit: this.state.visitCount,
+    //     clickCount: this.state.clickCount
+    //   }
+    //   dbRef.push({session});
 
-      //beforeunload needs to return something, so delete the return to work in chrome
-      delete e['returnValue'];
-    })
+    //   //beforeunload needs to return something, so delete the return to work in chrome
+    //   delete e['returnValue'];
+    // })
   }
   
   //analyze data from FB
@@ -91,7 +95,6 @@ class App extends Component {
     })
   }
 
-
   //count button clicks
   clickCounter = () => {
 
@@ -101,9 +104,36 @@ class App extends Component {
     })
   }
 
-  scrollCounter = () => {
-    console.log(`I'm scrolled`)
+isVisible = (elem) => {
+
+  //find the element's relative position to viewport
+  console.log(`isVisible`)
+  console.log(elem)
+  let coords = elem.getBoundingClientRect();
+
+  let windowHeight = document.documentElement.clientHeight;
+
+  // top elem edge is visible?
+  let topVisible = coords.top > 0 && coords.top < windowHeight;
+
+  // bottom elem edge is visible?
+  let bottomVisible = coords.bottom < windowHeight && coords.bottom > 0;
+
+  let middleVisible = coords.top < 0 && coords.bottom > windowHeight;
+
+  return (topVisible || bottomVisible) || middleVisible;
+}
+
+showVisible = () => {
+  let section = document.getElementById('scrollSection')
+  console.log(`showVisible`)
+  console.log(section)
+  if (this.isVisible(section)) {
+    console.log(`you're here`)
+  } else {
+    console.log(`not visible`) 
   }
+}
 
   // removeData = () => {
   //   const dbRef = firebase.database().ref();
@@ -112,10 +142,10 @@ class App extends Component {
 
   render() {
     return (
-      <div>
+      <div onScroll={this.showVisible}>
         <Header />
         <Button clickFn={this.clickCounter}/>
-        <Scroll scrollFn={this.scrollCounter} />
+        <Scroll/>
         <Result click={this.state.clickCount} visit={this.state.totalVisit} avgClick={this.state.avgClick}/>
         {/* <button onClick={this.removeData}>Shit happened</button> */}
       </div>

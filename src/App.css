@@ -44,6 +44,10 @@ header p {
   color: white;
 }
 
+.resultSection {
+  height: 100vh;
+}
+
 .App-link {
   color: #61dafb;
 }
