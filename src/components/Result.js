@@ -5,9 +5,11 @@ class Result extends Component {
 
   render() {
     return (
-      <div>
-        <p>Button has been clicked {this.props.click} times.</p>
-      </div>
+      <section className="resultSection">
+        <p>You've clicked the button {this.props.click} times.</p>
+        <p>This page has been visited {this.props.visit} times.</p>
+        <p>Average button click is {this.props.avgClick} times.</p>
+      </section>
     )
   };
 }

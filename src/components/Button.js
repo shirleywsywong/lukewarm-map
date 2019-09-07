@@ -5,9 +5,9 @@ class Button extends Component {
 
   render() {
     return (
-      <div>
-        <button onClick={this.props.fn}>Click this</button>
-      </div>
+      <section className="buttonSection">
+        <button onClick={this.props.clickFn}>Click this</button>
+      </section>
     )
   };
 }
