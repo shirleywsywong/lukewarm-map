@@ -44,6 +44,28 @@ header p {
   color: white;
 }
 
+.hoverSection{
+  height: 600px;
+  background: #61dafb;
+  padding: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.hoverSection .box {
+  background-color: #282c34;
+  width:200px;
+  height: 200px;
+  padding: 50px 0;
+  color: white;
+  text-align: center;
+  font-size: calc(10px + 2vmin);
+}
+
+.hoverSection .box:hover {
+  animation: jiggle infinite 0.2s linear;
+}
+
 .resultSection {
   height: 120vh;
   padding: 100px;
@@ -65,5 +87,14 @@ header p {
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes jiggle {
+  0% {
+    transform: rotate(-1deg);
+    }
+  50% {
+    transform: rotate(1deg);
   }
 }
