@@ -4,7 +4,7 @@ import Header from './components/Header';
 import Button from './components/Button';
 import Scroll from './components/Scroll';
 import Hover from './components/Hover';
-// import Form from './components/Form';
+import Form from './components/Form';
 import Result from './components/Result';
 import './App.css';
 
@@ -34,6 +34,8 @@ class App extends Component {
       totalHoverCount: 0, //length of values in scrollElapsedArray
       avgHoverCount: 0, //data from FB (dataAnalysis fn)
       avgHoverTime: 0, //data from FB (dataAnalysis fn)
+      keystrokeCount: 0,
+      form: {},
     }
   }
 
@@ -46,18 +48,18 @@ class App extends Component {
     // connecting firebase with react
     const dbRef = firebase.database().ref();
     
-    dbRef.on('value', (data) => {
+    // dbRef.on('value', (data) => {
       
-      //grab the data from FB, return an object
-      data = data.val();
+    //   //grab the data from FB, return an object
+    //   data = data.val();
       
-      //go through this object, and turn it into an array 
-      const fbValuesArray = Object.values(data);
+    //   //go through this object, and turn it into an array 
+    //   const fbValuesArray = Object.values(data);
       
-      //pass this data to data analysis function
-      this.dataAnalysis(fbValuesArray)
+    //   //pass this data to data analysis function
+    //   this.dataAnalysis(fbValuesArray)
 
-    })
+    // })
 
     //upload data collected to firebase before user refreshes or close the page
     window.addEventListener('beforeunload', (e) => {
@@ -71,7 +73,7 @@ class App extends Component {
         hoverTimeElapsed: this.state.totalHoverTime,
         hoverCount: this.state.totalHoverCount
       }
-      dbRef.push({session});
+      // dbRef.push({session});
 
       //beforeunload needs to return something, so delete the return to work in chrome
       delete e['returnValue'];
@@ -230,7 +232,7 @@ class App extends Component {
     }
   }
 
-  //Scroll section: calculate total time span
+  //calculate total time span
   timeSpanCounter = (timeArray) => {
     if(timeArray.length == 0) return 0;
     
@@ -267,8 +269,25 @@ class App extends Component {
       totalHoverTime: hoverSpanTotal,
       totalHoverCount: hoverCount,
     })
-    
   }
+  //-------------Form section functions here ------------------
+  //record if user input anything in the form
+  //input watch change on each field
+  //record to state
+  formTyping = (event) => {
+    let isTyped = this.state.keystrokeCount;
+    if (event.target.name) {
+      isTyped = isTyped + 1;
+      console.log(event.target.name + ` is typed ` + isTyped)
+    }
+    //write an object literal, with the field name as key and istyped as value, then push it to the form object in state
+    this.setState({
+      //multiple inputs, give the fields a different name, and track the changes by the name
+      [event.target.name]: event.target.value,
+      keystrokeCount: isTyped,
+    })
+  }
+
 
 
   // Activate only in emergency situation, like putting the database in an infinite loop
@@ -284,7 +303,7 @@ class App extends Component {
         <Button clickFn={this.clickCounter} />
         <Scroll />
         <Hover mouseEnterFn={this.mouseEnter} mouseLeaveFn={this.mouseLeave}/>
-        {/* <Form/> */}
+        <Form formTyping={this.formTyping}/>
         <Result 
           click={this.state.clickCount} 
           scrollThrough={this.state.totalScrollThrough}

@@ -1,3 +1,4 @@
+/* ------ Setup ------ */
 article,aside,details,figcaption,figure,footer,header,hgroup,nav,section,summary{display:block;}audio,canvas,video{display:inline-block;}audio:not([controls]){display:none;height:0;}[hidden]{display:none;}html{font-family:sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;}a:focus{outline:thin dotted;}a:active,a:hover{outline:0;}h1{font-size:2em;}abbr[title]{border-bottom:1px dotted;}b,strong{font-weight:700;}dfn{font-style:italic;}mark{background:#ff0;color:#000;}code,kbd,pre,samp{font-family:monospace, serif;font-size:1em;}pre{white-space:pre-wrap;word-wrap:break-word;}q{quotes:\201C \201D \2018 \2019;}small{font-size:80%;}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline;}sup{top:-.5em;}sub{bottom:-.25em;}img{border:0;}svg:not(:root){overflow:hidden;}fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em;}button,input,select,textarea{font-family:inherit;font-size:100%;margin:0;}button,input{line-height:normal;}button,html input[type=button],/* 1 */input[type=reset],input[type=submit]{-webkit-appearance:button;cursor:pointer;}button[disabled],input[disabled]{cursor:default;}input[type=checkbox],input[type=radio]{box-sizing:border-box;padding:0;}input[type=search]{-webkit-appearance:textfield;-moz-box-sizing:content-box;-webkit-box-sizing:content-box;box-sizing:content-box;}input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-search-decoration{-webkit-appearance:none;}textarea{overflow:auto;vertical-align:top;}table{border-collapse:collapse;border-spacing:0;}body,figure{margin:0;}legend,button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0;}
 
 .clearfix:after {visibility: hidden; display: block; font-size: 0; content: ''; clear: both; height: 0; }
@@ -5,7 +6,10 @@ article,aside,details,figcaption,figure,footer,header,hgroup,nav,section,summary
 * { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
 
 .visuallyHidden:not(:focus):not(:active) { position: absolute; width: 1px; height: 1px; margin: -1px;border: 0;padding: 0;white-space: nowrap;clip-path: inset(100%);clip: rect(00 0 0);overflow: hidden;}
-
+.flex {
+  display: flex;
+}
+/* ------ header section ------ */
 header {
   text-align: center;
   height: 75vh;
@@ -24,14 +28,14 @@ header {
 }
 header p {
   font-size: 3rem;
-  animation: App-logo-spin infinite 20s linear;
 }
+/* ------ button section ------ */
 .buttonSection {
   height: 30vh;
   padding-top: 50px;
   text-align: center;
 }
-
+/* ------ scroll section ------ */
 .scrollSection {
   padding: 0 100px;
   background-color: #282c34;
@@ -43,12 +47,11 @@ header p {
   font-size: calc(10px + 2vmin);
   color: white;
 }
-
+/* ------ hover section ------ */
 .hoverSection{
   height: 600px;
   background: #61dafb;
   padding: 100px;
-  display: flex;
   justify-content: center;
   align-items: center;
 }
@@ -60,27 +63,56 @@ header p {
   color: white;
   text-align: center;
   font-size: calc(10px + 2vmin);
+  animation: App-logo-spin infinite 20s linear;
 }
-
 .hoverSection .box:hover {
-  animation: jiggle infinite 0.2s linear;
+  animation: App-logo-spin infinite 0.2s linear;
 }
-
+/* ------ form section ------ */
+.formSection {
+  margin: 50px 0;
+}
+.formSection h2{
+  text-align: center;
+}
+form {
+  flex-direction: column;
+  width: 60%;
+  margin: 0 auto;
+  background-color: #F2E6DC;
+  padding: 50px 80px;
+  border-radius: 10px;
+}
+input, button {
+  border: 2px solid transparent;
+  border-radius: 7px;
+  padding: 10px; 
+  margin: 10px 0;
+}
+input:hover, input:focus, button:hover, button:focus {
+  border: 2px solid yellow;
+  border-radius: 7px; 
+}
+.half {
+  justify-content: space-between;
+}
+.half .formNameField, .half .formPhoneField {
+  width: calc((100% - 20px) / 2); 
+  flex-direction: column;
+}
+.email {
+  flex-direction: column;
+}
+.submit {
+  background-color: #FFB000;
+}
+/* ------ result section ------ */
 .resultSection {
   height: 120vh;
   padding: 100px;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-.App-logo {
-
-  height: 40vmin;
-  pointer-events: none;
-}
-
+/* ------ animations ------ */
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

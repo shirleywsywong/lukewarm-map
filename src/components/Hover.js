@@ -4,7 +4,7 @@ class Hover extends Component {
 
   render() {
     return (
-      <section className="hoverSection">
+      <section className="hoverSection flex">
         <div onMouseEnter={this.props.mouseEnterFn} onMouseLeave={this.props.mouseLeaveFn} className="box">
           <p>Hover Me!</p>
         </div>
