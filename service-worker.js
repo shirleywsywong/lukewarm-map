@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/shirley-wong-project-5/precache-manifest.5959f9be8abca27da59c8ab0364138d7.js"
+  "/shirley-wong-project-5/precache-manifest.ff32a535b76cef925ce2d752d6be8e34.js"
 );
 
 self.addEventListener('message', (event) => {
