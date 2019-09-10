@@ -9,7 +9,7 @@ class Form extends Component {
         <form action="" className="flex">
           <div className="half flex">
             <div className="formNameField flex">
-              <label for="name">* Name</label>
+              <label htmlfeor="name">* Name</label>
               <input type="text" 
                 name="formEntryName" 
                 id="name" 
@@ -18,7 +18,7 @@ class Form extends Component {
                 onKeyUp={this.props.formTyping}/>
             </div>
             <div className="formPhoneField flex">
-              <label for="phone">* Phone Number</label>
+              <label htmlfeor="phone">* Phone Number</label>
               <input 
                 type="text" 
                 name="formEntryPhone" 
@@ -29,7 +29,7 @@ class Form extends Component {
   					</div>
           </div>
           <div className="email flex">
-            <label for="email">* Email</label>
+            <label htmlfeor="email">* Email</label>
             <input 
               type="email" 
               name="formEntryEmail" 
@@ -38,7 +38,6 @@ class Form extends Component {
               required="true"
               onKeyUp={this.props.formTyping}/>
           </div>
-          <button type="submit" value="Submit" className="submit">Submit</button>
         </form>
       </section>
     )

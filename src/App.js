@@ -34,8 +34,15 @@ class App extends Component {
       totalHoverCount: 0, //length of values in scrollElapsedArray
       avgHoverCount: 0, //data from FB (dataAnalysis fn)
       avgHoverTime: 0, //data from FB (dataAnalysis fn)
-      keystrokeCount: 0,
-      form: {},
+      keyCountName: 0, //record keystroke on form Name field
+      keyCountPhone: 0, //record keystroke on form Phone field
+      keyCountEmail: 0, //record keystroke on form Email field
+      formEntryName: '', //record values entered from Name field
+      formEntryPhone: '', //record values entered from Phone field
+      formEntryEmail: '', //record values entered from Email field
+      formNameCount: 0, //data from FB (dataAnalysis fn)
+      formPhoneCount: 0, //data from FB (dataAnalysis fn)
+      formEmailCount: 0, //data from FB (dataAnalysis fn)
     }
   }
 
@@ -48,18 +55,18 @@ class App extends Component {
     // connecting firebase with react
     const dbRef = firebase.database().ref();
     
-    // dbRef.on('value', (data) => {
+    dbRef.on('value', (data) => {
       
-    //   //grab the data from FB, return an object
-    //   data = data.val();
+      //grab the data from FB, return an object
+      data = data.val();
       
-    //   //go through this object, and turn it into an array 
-    //   const fbValuesArray = Object.values(data);
+      //go through this object, and turn it into an array 
+      const fbValuesArray = Object.values(data);
       
-    //   //pass this data to data analysis function
-    //   this.dataAnalysis(fbValuesArray)
+      //pass this data to data analysis function
+      this.dataAnalysis(fbValuesArray)
 
-    // })
+    })
 
     //upload data collected to firebase before user refreshes or close the page
     window.addEventListener('beforeunload', (e) => {
@@ -71,16 +78,22 @@ class App extends Component {
         scrollCount: this.state.totalScrollThrough,
         didExitInScroll: this.state.lastSectionState,
         hoverTimeElapsed: this.state.totalHoverTime,
-        hoverCount: this.state.totalHoverCount
+        hoverCount: this.state.totalHoverCount,
+        keyCountName: this.state.keyCountName,
+        keyCountPhone: this.state.keyCountPhone,
+        keyCountEmail: this.state.keyCountEmail,
+        formEntryName: this.state.formEntryName,
+        formEntryPhone: this.state.formEntryPhone,
+        formEntryEmail: this.state.formEntryEmail,
       }
-      // dbRef.push({session});
+      dbRef.push({session});
 
       //beforeunload needs to return something, so delete the return to work in chrome
       delete e['returnValue'];
     })
   }
   
-  //analyze data from FB
+  //-------------analyze data from FB ------------------
   dataAnalysis = (fbValuesArray) => {
 
     //only want data in the session object
@@ -97,6 +110,12 @@ class App extends Component {
     let readingArray = [];
     let hoverCountArray = [];
     let hoverTimeArray = [];
+    let keyCountNameArray = [];
+    let keyCountPhoneArray = [];
+    let keyCountEmailArray = [];
+    let formEntryNameArray = [];
+    let formEntryPhoneArray = [];
+    let formEntryEmailArray = [];
     sessionArray.forEach( (item) => {
       clickArray.push(item.clickCount);
       visitArray.push(item.visit);
@@ -105,6 +124,12 @@ class App extends Component {
       readingArray.push(item.didExitInScroll);
       hoverCountArray.push(item.hoverCount);
       hoverTimeArray.push(item.hoverTimeElapsed);
+      keyCountNameArray.push(item.keyCountName);
+      keyCountPhoneArray.push(item.keyCountPhone);
+      keyCountEmailArray.push(item.keyCountEmail);
+      formEntryNameArray.push(item.formEntryName);
+      formEntryPhoneArray.push(item.formEntryPhone);
+      formEntryEmailArray.push(item.formEntryEmail);
     })
 
     //total up the data
@@ -141,14 +166,33 @@ class App extends Component {
 
     //determine if user finish reading
     for (let i = 0; i < scrollCountArray.length; i++) {
-      if (readingArray[i] && scrollCountArray[i] == 0) {
+      if (readingArray[i] && scrollCountArray[i] === 0) {
         this.setState({
           exitMidPage: this.state.exitMidPage + 1,
         })
       }
     }
 
-    // store the totals in state, to be rendered in results section
+    //determin if user started filling out form
+    function formCounting (array) {
+      let count = 0;
+
+      //grab the values in each form field's array
+      const entryLength = array.values();
+
+      //only want to count the people who started typing in the fields
+      for (let eachEntryLength of entryLength) {
+        if (eachEntryLength !== 0) {
+          count = count +1;
+        }
+      }
+      return count;
+    }
+    let nameCount = formCounting(keyCountNameArray);
+    let phoneCount = formCounting(keyCountPhoneArray);
+    let emailCount = formCounting(keyCountEmailArray);
+
+    // store the results in state, to be rendered in results section
     this.setState({
       totalVisit: fbVisitTotal,
       totalClick: fbClickTotal,
@@ -157,6 +201,9 @@ class App extends Component {
       avgScrollTime: fbAverageScrollElapsed,
       avgHoverCount: fbAverageHoverCount,
       avgHoverTime: fbAverageHoverElapsed,
+      formNameCount: nameCount,
+      formPhoneCount: phoneCount,
+      formEmailCount: emailCount,
     })
   }
   //-------------Click section functions here ------------------
@@ -234,7 +281,7 @@ class App extends Component {
 
   //calculate total time span
   timeSpanCounter = (timeArray) => {
-    if(timeArray.length == 0) return 0;
+    if(timeArray.length === 0) return 0;
     
     const timeSpanTotal = timeArray.reduce((total, num) => {
       return total + num;
@@ -271,23 +318,34 @@ class App extends Component {
     })
   }
   //-------------Form section functions here ------------------
-  //record if user input anything in the form
-  //input watch change on each field
-  //record to state
+  //count keystrokes on each of the form fields
   formTyping = (event) => {
-    let isTyped = this.state.keystrokeCount;
-    if (event.target.name) {
-      isTyped = isTyped + 1;
-      console.log(event.target.name + ` is typed ` + isTyped)
+    let formNameCount = this.state.keyCountName;
+    let formPhoneCount = this.state.keyCountPhone;
+    let formEmailCount = this.state.keyCountEmail;
+
+    if (event.target.name === "formEntryName") {
+      formNameCount = formNameCount + 1;
+    } else 
+    if (event.target.name === "formEntryPhone") {
+      formPhoneCount = formPhoneCount + 1;
+    } else
+    if (event.target.name === "formEntryEmail") {
+      formEmailCount = formEmailCount + 1;
     }
-    //write an object literal, with the field name as key and istyped as value, then push it to the form object in state
+      
+    //save values to state
     this.setState({
-      //multiple inputs, give the fields a different name, and track the changes by the name
       [event.target.name]: event.target.value,
-      keystrokeCount: isTyped,
+      keyCountName: formNameCount, 
+      keyCountPhone:formPhoneCount,
+      keyCountEmail: formEmailCount,
     })
   }
-
+  //-------------revealing results section ------------------
+  revealFn = () => {
+    document.getElementById("results").classList.add("reveal");
+  }
 
 
   // Activate only in emergency situation, like putting the database in an infinite loop
@@ -305,6 +363,7 @@ class App extends Component {
         <Hover mouseEnterFn={this.mouseEnter} mouseLeaveFn={this.mouseLeave}/>
         <Form formTyping={this.formTyping}/>
         <Result 
+          revealFn={this.revealFn}
           click={this.state.clickCount} 
           scrollThrough={this.state.totalScrollThrough}
           scrollTime={this.state.totalScrollTime}
@@ -317,6 +376,12 @@ class App extends Component {
           exitMidPage={this.state.exitMidPage}
           avgHoverCount={this.state.avgHoverCount}
           avgHoverTime={this.state.avgHoverTime}
+          nameCount={this.state.keyCountName}
+          phoneCount={this.state.keyCountPhone}
+          emailCount={this.state.keyCountEmail}
+          totalNameCount={this.state.formNameCount}
+          totalPhoneCount={this.state.formPhoneCount}
+          totalEmailCount={this.state.formEmailCount}
         />
         {/* ONLY ACTIVATE IF YOU REALLY FUCKED UP <button onClick={this.removeData}>Shit happened</button> */}
       </div>
