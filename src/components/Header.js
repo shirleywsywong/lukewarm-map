@@ -11,6 +11,7 @@ class Header extends Component {
         <h1 className="head3">LukewarmApp</h1>
         <h1 className="head4">Lukewarm Map App</h1>
         <p>👀</p>
+        <p>Like a heatmap, but only lukewarm.</p>
       </header>
     )
   };
