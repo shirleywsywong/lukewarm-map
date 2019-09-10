@@ -6,6 +6,7 @@ class Result extends Component {
   render() {
     return (
       <section className="resultSection">
+        <p>That was a very weird website, what did we just do?</p>
         <a href="#results" className="resultButton" onClick={this.props.revealFn}>See Results</a>
         {/* render data from react */}
         <div id="results" className="results">
