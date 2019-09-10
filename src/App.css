@@ -12,7 +12,7 @@ article,aside,details,figcaption,figure,footer,header,hgroup,nav,section,summary
 /* ------ header section ------ */
 header {
   text-align: center;
-  height: 75vh;
+  height: 80vh;
 }
 .head1 {
   font-size: 5rem;
@@ -26,8 +26,11 @@ header {
 .head4 {
   font-size: 2rem;
 }
-header p {
+header .emoji {
   font-size: 3rem;
+}
+header p {
+  font-size: 1rem;
 }
 /* ------ button section ------ */
 .buttonSection {
