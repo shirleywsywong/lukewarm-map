@@ -2,7 +2,7 @@
   "name": "lukewarm-map",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://shirleywsywong.github.io/shirley-wong-project-5/",
+  "homepage": "https://shirleywsywong.github.io/lukewarm-map/",
   "dependencies": {
     "firebase": "^6.5.0",
     "gh-pages": "^2.1.1",
