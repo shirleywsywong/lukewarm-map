@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/shirley-wong-project-5/static/css/main.10145751.chunk.css",
-    "main.js": "/shirley-wong-project-5/static/js/main.218eb77b.chunk.js",
-    "main.js.map": "/shirley-wong-project-5/static/js/main.218eb77b.chunk.js.map",
-    "runtime~main.js": "/shirley-wong-project-5/static/js/runtime~main.8571c672.js",
-    "runtime~main.js.map": "/shirley-wong-project-5/static/js/runtime~main.8571c672.js.map",
-    "static/js/2.7dd87c1c.chunk.js": "/shirley-wong-project-5/static/js/2.7dd87c1c.chunk.js",
-    "static/js/2.7dd87c1c.chunk.js.map": "/shirley-wong-project-5/static/js/2.7dd87c1c.chunk.js.map",
-    "index.html": "/shirley-wong-project-5/index.html",
-    "precache-manifest.5da779a7fa6e02bf6b65106fc34e172c.js": "/shirley-wong-project-5/precache-manifest.5da779a7fa6e02bf6b65106fc34e172c.js",
-    "service-worker.js": "/shirley-wong-project-5/service-worker.js",
-    "static/css/main.10145751.chunk.css.map": "/shirley-wong-project-5/static/css/main.10145751.chunk.css.map"
+    "main.css": "/lukewarm-map/static/css/main.10145751.chunk.css",
+    "main.js": "/lukewarm-map/static/js/main.dbfb12fb.chunk.js",
+    "main.js.map": "/lukewarm-map/static/js/main.dbfb12fb.chunk.js.map",
+    "runtime~main.js": "/lukewarm-map/static/js/runtime~main.610af085.js",
+    "runtime~main.js.map": "/lukewarm-map/static/js/runtime~main.610af085.js.map",
+    "static/js/2.27c35036.chunk.js": "/lukewarm-map/static/js/2.27c35036.chunk.js",
+    "static/js/2.27c35036.chunk.js.map": "/lukewarm-map/static/js/2.27c35036.chunk.js.map",
+    "index.html": "/lukewarm-map/index.html",
+    "precache-manifest.9112c6ae40bfece513bd0aef6d8a3dd9.js": "/lukewarm-map/precache-manifest.9112c6ae40bfece513bd0aef6d8a3dd9.js",
+    "service-worker.js": "/lukewarm-map/service-worker.js",
+    "static/css/main.10145751.chunk.css.map": "/lukewarm-map/static/css/main.10145751.chunk.css.map"
   }
 }
