@@ -68,7 +68,7 @@ class App extends Component {
 
     })
 
-    //upload data collected to firebase before user refreshes or close the page
+    // upload data collected to firebase before user refreshes or close the page
     window.addEventListener('beforeunload', (e) => {
 
       const session = {
@@ -208,11 +208,11 @@ class App extends Component {
   }
   //-------------Click section functions here ------------------
   //count button clicks
-  clickCounter = () => {
+  appClickCount = (clickCount) => {
 
     //each time the button is clicked, record it locally first
     this.setState({
-      clickCount: this.state.clickCount + 1,
+      clickCount
     })
   }
 
@@ -358,7 +358,7 @@ class App extends Component {
     return (
       <div>
         <Header />
-        <Button clickFn={this.clickCounter} />
+        <Button clickFn={this.appClickCount} />
         <Scroll />
         <Hover mouseEnterFn={this.mouseEnter} mouseLeaveFn={this.mouseLeave}/>
         <Form formTyping={this.formTyping}/>
