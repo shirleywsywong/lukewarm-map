@@ -1,7 +1,73 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 
-function Scroll() {
+const Scroll = ({scrollFn}) => {
   
+  // const initialClick = [];
+  // const [elapsedTimeArray, setElapsedTimeArray] = useState(initialClick);
+  const initialScrollState = false;
+  const [lastSectionState, setLastSectionState] = useState(initialScrollState);
+  const initialEntryDate = {};
+  const [scrollEntryTime, setScrollEntryTime] = useState(initialEntryDate);
+  const initialExitDate = {};
+  const [scrollExitTime, setScrollExitTime] = useState(initialExitDate);
+
+  useEffect(() => {
+    showVisible();
+    window.addEventListener("scroll", showVisible, false);
+  }, []);
+
+  //see if scroll section is in the viewport
+  const isVisible = (elem) => {
+
+    //find the element's relative position to viewport
+    let coords = elem.getBoundingClientRect();
+
+    let windowHeight = document.documentElement.clientHeight;
+
+    // top elem edge is visible?
+    let topVisible = coords.top > 0 && coords.top < windowHeight;
+
+    // bottom elem edge is visible?
+    let bottomVisible = coords.bottom < windowHeight && coords.bottom > 0;
+
+    let middleVisible = coords.top < 0 && coords.bottom > windowHeight;
+
+    //do something only if scroll section is visible 
+    return (topVisible || bottomVisible) || middleVisible;
+  }
+
+  //if scroll section is visible, do this
+  const showVisible = () => {
+    let section = document.getElementById('scrollSection');
+    let currentSectionState = isVisible(section);
+    // let elapsedTimeArray = this.state.scrollElapsedArray; 
+
+    // you weren't in the section and now you are
+    if(!lastSectionState && currentSectionState) {
+
+      //record the entry time
+      let entryTime = Date.now();
+      setLastSectionState(true);
+      setScrollEntryTime(entryTime);
+      console.log(entryTime)
+    } else // you were in the section, and now you aren't
+    if(lastSectionState && !currentSectionState) { 
+
+      // record the exit time
+      let exitTime = Date.now();
+      setLastSectionState(false);
+      setScrollExitTime(exitTime);
+      console.log(exitTime)
+      //calculate time span for each entry and exit
+      let elapsedTimeArray = [];
+      let elapsedTime = scrollExitTime - scrollEntryTime;
+      console.log(elapsedTime)
+      elapsedTimeArray.push(elapsedTime);
+
+      scrollFn(elapsedTimeArray)
+    }
+  }
+
   return (
     <section className="scrollSection" id="scrollSection">
       <h2>Educated Humour</h2>

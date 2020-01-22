@@ -49,9 +49,6 @@ class App extends Component {
   //things that needs to happen on page load goes here
   componentDidMount() {
 
-    this.showVisible();
-    window.addEventListener("scroll", this.showVisible, false);
-
     // connecting firebase with react
     const dbRef = firebase.database().ref();
     
@@ -215,68 +212,81 @@ class App extends Component {
       clickCount
     })
   }
-
+  
   //-------------Scroll section functions here ------------------
-  //see if scroll section is in the viewport
-  isVisible = (elem) => {
+  //\\//\\//\\//\\//\\//\\//\\//\\
+  // isVisible = (elem) => {
 
-    //find the element's relative position to viewport
-    let coords = elem.getBoundingClientRect();
+  //   //find the element's relative position to viewport
+  //   let coords = elem.getBoundingClientRect();
 
-    let windowHeight = document.documentElement.clientHeight;
+  //   let windowHeight = document.documentElement.clientHeight;
 
-    // top elem edge is visible?
-    let topVisible = coords.top > 0 && coords.top < windowHeight;
+  //   // top elem edge is visible?
+  //   let topVisible = coords.top > 0 && coords.top < windowHeight;
 
-    // bottom elem edge is visible?
-    let bottomVisible = coords.bottom < windowHeight && coords.bottom > 0;
+  //   // bottom elem edge is visible?
+  //   let bottomVisible = coords.bottom < windowHeight && coords.bottom > 0;
 
-    let middleVisible = coords.top < 0 && coords.bottom > windowHeight;
+  //   let middleVisible = coords.top < 0 && coords.bottom > windowHeight;
 
-    //do something only if scroll section is visible 
-    return (topVisible || bottomVisible) || middleVisible;
-  }
+  //   //do something only if scroll section is visible 
+  //   return (topVisible || bottomVisible) || middleVisible;
+  // }
 
-  //if scroll section is visible, do this
-  showVisible = () => {
-    let section = document.getElementById('scrollSection');
-    let currentSectionState = this.isVisible(section);
-    let elapsedTimeArray = this.state.scrollElapsedArray; 
+  // //if scroll section is visible, do this
+  // showVisible = () => {
+  //   let section = document.getElementById('scrollSection');
+  //   let currentSectionState = this.isVisible(section);
+  //   let elapsedTimeArray = this.state.scrollElapsedArray; 
     
-    // you weren't in the section and now you are
-    if(!this.state.lastSectionState && currentSectionState) {
+  //   // you weren't in the section and now you are
+  //   if(!this.state.lastSectionState && currentSectionState) {
 
-      //record the entry time
-      let scrollEntryTime = Date.now();
-      this.setState({
-        lastSectionState: true,
-        scrollEntryTime: scrollEntryTime,
-      })
-    } else // you were in the section, and now you aren't
-    if(this.state.lastSectionState && !currentSectionState) { 
+  //     //record the entry time
+  //     let scrollEntryTime = Date.now();
+  //     this.setState({
+  //       lastSectionState: true,
+  //       scrollEntryTime: scrollEntryTime,
+  //     })
+  //   } else // you were in the section, and now you aren't
+  //   if(this.state.lastSectionState && !currentSectionState) { 
 
-      // record the exit time
-      let scrollExitTime = Date.now();
-      this.setState({
-        lastSectionState: false,
-        scrollExitTime: scrollExitTime,
-      })
+  //     // record the exit time
+  //     let scrollExitTime = Date.now();
+  //     this.setState({
+  //       lastSectionState: false,
+  //       scrollExitTime: scrollExitTime,
+  //     })
 
-      //calculate time span for each entry and exit
-      let elapsedTime = this.state.scrollExitTime - this.state.scrollEntryTime;
-      elapsedTimeArray.push(elapsedTime);
+  //     //calculate time span for each entry and exit
+  //     let elapsedTime = this.state.scrollExitTime - this.state.scrollEntryTime;
+  //     elapsedTimeArray.push(elapsedTime);
       
-      this.setState({
-        scrollElapsedArray: elapsedTimeArray,
-      })
+  //*     this.setState({
+  //*       scrollElapsedArray: elapsedTimeArray,
+  //*     })
 
-      const scrollSpanTotal = this.timeSpanCounter(this.state.scrollElapsedArray);
-      const scrollCount = this.state.scrollElapsedArray.length;
-      this.setState({
-        totalScrollTime: scrollSpanTotal,
-        totalScrollThrough: scrollCount,
-      })
-    }
+  //*     const scrollSpanTotal = this.timeSpanCounter(this.state.scrollElapsedArray);
+  //*     const scrollCount = this.state.scrollElapsedArray.length;
+  //*     this.setState({
+  //*       totalScrollTime: scrollSpanTotal,
+  //*       totalScrollThrough: scrollCount,
+  //*     })
+  //   }
+  // }
+  //\\//\\//\\//\\//\\//\\//\\//\\
+  appScroll = (scrollElapsedArray) => {
+    this.setState({
+      scrollElapsedArray
+    })
+
+    const scrollSpanTotal = this.timeSpanCounter(this.state.scrollElapsedArray);
+    const scrollCount = this.state.scrollElapsedArray.length;
+    this.setState({
+      totalScrollTime: scrollSpanTotal,
+      totalScrollThrough: scrollCount,
+    })
   }
 
   //calculate total time span
@@ -359,7 +369,7 @@ class App extends Component {
       <div>
         <Header />
         <Button clickFn={this.appClickCount} />
-        <Scroll />
+        <Scroll scrollFn={this.appScroll} />
         <Hover mouseEnterFn={this.mouseEnter} mouseLeaveFn={this.mouseLeave}/>
         <Form formTyping={this.formTyping}/>
         <Result 
