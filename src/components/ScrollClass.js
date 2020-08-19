@@ -1,6 +1,74 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
 class Scroll extends Component {
+  
+  constructor() {
+    super();
+    this.state = {
+      lastSectionState: false,
+      scrollEntryTime: 0, //time user enter scroll section
+      scrollExitTime: 0, //time user exit scroll section
+      scrollElapsedArray: [], //record each time difference user enter and exit scroll section
+    }
+  }
+
+  componentDidMount() {
+    this.showVisible();
+    window.addEventListener("scroll", this.showVisible, false);
+  }
+  
+  //see if scroll section is in the viewport
+  isVisible = (elem) => {
+
+    //find the element's relative position to viewport
+    let coords = elem.getBoundingClientRect();
+
+    let windowHeight = document.documentElement.clientHeight;
+
+    // top elem edge is visible?
+    let topVisible = coords.top > 0 && coords.top < windowHeight;
+
+    // bottom elem edge is visible?
+    let bottomVisible = coords.bottom < windowHeight && coords.bottom > 0;
+
+    let middleVisible = coords.top < 0 && coords.bottom > windowHeight;
+
+    //do something only if scroll section is visible 
+    return (topVisible || bottomVisible) || middleVisible;
+  }
+
+  //if scroll section is visible, do this
+  showVisible = () => {
+    let section = document.getElementById('scrollSection');
+    let currentSectionState = this.isVisible(section);
+    let elapsedTimeArray = this.state.scrollElapsedArray; 
+
+    // you weren't in the section and now you are
+    if(!this.state.lastSectionState && currentSectionState) {
+
+      //record the entry time
+      let scrollEntryTime = Date.now();
+      this.setState({
+        lastSectionState: true,
+        scrollEntryTime: scrollEntryTime,
+      })
+    } else // you were in the section, and now you aren't
+    if(this.state.lastSectionState && !currentSectionState) { 
+
+      // record the exit time
+      let scrollExitTime = Date.now();
+      this.setState({
+        lastSectionState: false,
+        scrollExitTime: scrollExitTime,
+      })
+
+      //calculate time span for each entry and exit
+      let elapsedTime = this.state.scrollExitTime - this.state.scrollEntryTime;
+      elapsedTimeArray.push(elapsedTime);
+
+      this.props.scrollFn(elapsedTimeArray, this.state.lastSectionState)
+    }
+  }
   
   render() {
     return (
@@ -17,7 +85,8 @@ class Scroll extends Component {
         <p>The Bachelors of Fine Arts will be performing tomorrow night at 8 p.m. at Sala Rossa (4848 St. Laurent). Visit bachelorsoffinearts.wordpress.com for the group’s work and information about the show.</p>
       </section>
     )
-  };
+  }
 }
+
 
 export default Scroll;

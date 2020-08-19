@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import firebase from './components/firebase';
 import Header from './components/Header';
 import Button from './components/Button';
-import Scroll from './components/Scroll';
+// import Scroll from './components/ScrollClass';
+// import Scroll from './components/ScrollHook';
 import Hover from './components/Hover';
 import Form from './components/Form';
 import Result from './components/Result';
@@ -19,16 +20,12 @@ class App extends Component {
       totalClick: 0, //data from FB (dataAnalysis fn)
       avgClick: 0, //data from FB (dataAnalysis fn)
       lastSectionState: false, //check scroll location
-      scrollEntryTime: 0, //time user enter scroll section
-      scrollExitTime: 0, //time user exit scroll section
       scrollElapsedArray: [], //record each time difference user enter and exit scroll section
       totalScrollTime: 0, //sum of values in scrollElapsedArray
       totalScrollThrough: 0, //length of values in scrollElapsedArray
       avgScrollThrough: 0, //data from FB (dataAnalysis fn)
       avgScrollTime: 0, //data from FB (dataAnalysis fn)
       exitMidPage: 0, //data from FB (dataAnalysis fn)
-      hoverEntryTime: 0, //time user mouse enter box
-      hoverExitTime: 0, //time user mouse leave box
       hoverElapsedArray: [], //record each time difference user enter and exit hover box
       totalHoverTime: 0, //sum of values in hoverElapsedArray
       totalHoverCount: 0, //length of values in scrollElapsedArray
@@ -49,9 +46,6 @@ class App extends Component {
   //things that needs to happen on page load goes here
   componentDidMount() {
 
-    this.showVisible();
-    window.addEventListener("scroll", this.showVisible, false);
-
     // connecting firebase with react
     const dbRef = firebase.database().ref();
     
@@ -68,29 +62,29 @@ class App extends Component {
 
     })
 
-    //upload data collected to firebase before user refreshes or close the page
-    window.addEventListener('beforeunload', (e) => {
+    // upload data collected to firebase before user refreshes or close the page
+    // window.addEventListener('beforeunload', (e) => {
 
-      const session = {
-        visit: this.state.visitCount,
-        clickCount: this.state.clickCount,
-        scrollTimeElapsed: this.state.totalScrollTime,
-        scrollCount: this.state.totalScrollThrough,
-        didExitInScroll: this.state.lastSectionState,
-        hoverTimeElapsed: this.state.totalHoverTime,
-        hoverCount: this.state.totalHoverCount,
-        keyCountName: this.state.keyCountName,
-        keyCountPhone: this.state.keyCountPhone,
-        keyCountEmail: this.state.keyCountEmail,
-        formEntryName: this.state.formEntryName,
-        formEntryPhone: this.state.formEntryPhone,
-        formEntryEmail: this.state.formEntryEmail,
-      }
-      dbRef.push({session});
+    //   const session = {
+    //     visit: this.state.visitCount,
+    //     clickCount: this.state.clickCount,
+    //     scrollTimeElapsed: this.state.totalScrollTime,
+    //     scrollCount: this.state.totalScrollThrough,
+    //     didExitInScroll: this.state.lastSectionState,
+    //     hoverTimeElapsed: this.state.totalHoverTime,
+    //     hoverCount: this.state.totalHoverCount,
+    //     keyCountName: this.state.keyCountName,
+    //     keyCountPhone: this.state.keyCountPhone,
+    //     keyCountEmail: this.state.keyCountEmail,
+    //     formEntryName: this.state.formEntryName,
+    //     formEntryPhone: this.state.formEntryPhone,
+    //     formEntryEmail: this.state.formEntryEmail,
+    //   }
+    //   dbRef.push({session});
 
-      //beforeunload needs to return something, so delete the return to work in chrome
-      delete e['returnValue'];
-    })
+    //   //beforeunload needs to return something, so delete the return to work in chrome
+    //   delete e['returnValue'];
+    // })
   }
   
   //-------------analyze data from FB ------------------
@@ -208,77 +202,29 @@ class App extends Component {
   }
   //-------------Click section functions here ------------------
   //count button clicks
-  clickCounter = () => {
-
+  appClickCount = (clickCount) => {
     //each time the button is clicked, record it locally first
     this.setState({
-      clickCount: this.state.clickCount + 1,
+      clickCount
+    })
+  }
+  
+  // -------------Scroll section functions here ------------------
+  appScroll = (scrollElapsedArray, lastSectionState) => {
+    this.setState({
+      scrollElapsedArray,
+      lastSectionState
+    })
+
+    const scrollSpanTotal = this.timeSpanCounter(this.state.scrollElapsedArray);
+    const scrollCount = this.state.scrollElapsedArray.length;
+    this.setState({
+      totalScrollTime: scrollSpanTotal,
+      totalScrollThrough: scrollCount,
     })
   }
 
-  //-------------Scroll section functions here ------------------
-  //see if scroll section is in the viewport
-  isVisible = (elem) => {
-
-    //find the element's relative position to viewport
-    let coords = elem.getBoundingClientRect();
-
-    let windowHeight = document.documentElement.clientHeight;
-
-    // top elem edge is visible?
-    let topVisible = coords.top > 0 && coords.top < windowHeight;
-
-    // bottom elem edge is visible?
-    let bottomVisible = coords.bottom < windowHeight && coords.bottom > 0;
-
-    let middleVisible = coords.top < 0 && coords.bottom > windowHeight;
-
-    //do something only if scroll section is visible 
-    return (topVisible || bottomVisible) || middleVisible;
-  }
-
-  //if scroll section is visible, do this
-  showVisible = () => {
-    let section = document.getElementById('scrollSection');
-    let currentSectionState = this.isVisible(section);
-    let elapsedTimeArray = this.state.scrollElapsedArray; 
-    
-    // you weren't in the section and now you are
-    if(!this.state.lastSectionState && currentSectionState) {
-
-      //record the entry time
-      let scrollEntryTime = Date.now();
-      this.setState({
-        lastSectionState: true,
-        scrollEntryTime: scrollEntryTime,
-      })
-    } else // you were in the section, and now you aren't
-    if(this.state.lastSectionState && !currentSectionState) { 
-
-      // record the exit time
-      let scrollExitTime = Date.now();
-      this.setState({
-        lastSectionState: false,
-        scrollExitTime: scrollExitTime,
-      })
-
-      //calculate time span for each entry and exit
-      let elapsedTime = this.state.scrollExitTime - this.state.scrollEntryTime;
-      elapsedTimeArray.push(elapsedTime);
-      
-      this.setState({
-        scrollElapsedArray: elapsedTimeArray,
-      })
-
-      const scrollSpanTotal = this.timeSpanCounter(this.state.scrollElapsedArray);
-      const scrollCount = this.state.scrollElapsedArray.length;
-      this.setState({
-        totalScrollTime: scrollSpanTotal,
-        totalScrollThrough: scrollCount,
-      })
-    }
-  }
-
+  //\\//\\//\\//\\//\\//\\//\\//\\
   //calculate total time span
   timeSpanCounter = (timeArray) => {
     if(timeArray.length === 0) return 0;
@@ -288,35 +234,22 @@ class App extends Component {
     })
     return timeSpanTotal
   }
+  //\\//\\//\\//\\//\\//\\//\\//\\
   //-------------Hover section functions here ------------------
-  //on mouse enter, grab current time
-  mouseEnter = () => {
-    const hoverEntryTime = Date.now();
+  appHover = (hoverArray) => {
     this.setState({
-      hoverEntryTime: hoverEntryTime,
+      hoverElapsedArray: hoverArray
     })
-  }
-
-  //on mouse leave, grab current time
-  mouseLeave = () => {
-    const hoverExitTime = Date.now();
     
-    //calculate the difference b/t entry and exit, and record the difference in an array
-    let hoverElapsedTime = hoverExitTime - this.state.hoverEntryTime;
-    let hoverElapsedArray = this.state.hoverElapsedArray;
-    hoverElapsedArray.push(hoverElapsedTime)
-
     //re-use timeSpanCounter calculator function
-    const hoverSpanTotal = this.timeSpanCounter(hoverElapsedArray);
-    const hoverCount = hoverElapsedArray.length;
-
+    const hoverSpanTotal = this.timeSpanCounter(this.state.hoverElapsedArray);
+    const hoverCount = this.state.hoverElapsedArray.length;
     this.setState({
-      hoverExitTime: hoverExitTime,
-      hoverElapsedArray: hoverElapsedArray,
       totalHoverTime: hoverSpanTotal,
       totalHoverCount: hoverCount,
     })
   }
+
   //-------------Form section functions here ------------------
   //count keystrokes on each of the form fields
   formTyping = (event) => {
@@ -358,9 +291,9 @@ class App extends Component {
     return (
       <div>
         <Header />
-        <Button clickFn={this.clickCounter} />
-        <Scroll />
-        <Hover mouseEnterFn={this.mouseEnter} mouseLeaveFn={this.mouseLeave}/>
+        <Button clickFn={this.appClickCount} />
+        {/* <Scroll scrollFn={this.appScroll} /> */}
+        <Hover hoverFn={this.appHover}/>
         <Form formTyping={this.formTyping}/>
         <Result 
           revealFn={this.revealFn}
